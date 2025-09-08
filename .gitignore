@@ -1,0 +1,29 @@
+# Gradle / build
+.gradle/
+build/
+**/build/
+captures/
+.externalNativeBuild/
+
+# Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Local config
+local.properties
+*.keystore
+*.jks
+
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Kotlin/Java
+*.log
+
+# Jetpack Compose previews cache
+/.kotlin
+

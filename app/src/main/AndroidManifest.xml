@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <!-- Optional if gonna read the inbox; not required for parsing incoming body -->
+    <!-- <uses-permission android:name="android.permission.READ_SMS" /> -->
+
+    <!-- Optional to avoid Play/device filtering -->
+    <!-- this way, the app can still be installed on tablets or devices without a SIM card-->
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
+
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.DojoNtkOtpReceiverAndNotifier">
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.DojoNtkOtpReceiverAndNotifier">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".receiver.SmsReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:ignore="MissingClass"
+            tools:node="merge">
+            <!-- AndroidX App Startup's bootstrap ContentProvider.
+              It runs library initializers at app start.
+              - authorities: unique per app (resolved from ${applicationId})
+              - exported=false: internal use only
+              - tools:node="merge": keep this node during manifest merging
+              - tools:ignore="MissingClass": silence lint if class not visible at parse time -->
+
+
+
+            <!-- esta linha vai desaparecer do merged manifest -->
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                tools:node="remove" />
+            <!-- Remove WorkManager's default auto-initializer so we can provide
+                 our own Configuration in App.kt.
+                 This prevents double initialization. (needed for HiltWorkerFactory injection).-->
+        </provider>
+
+    </application>
+
+</manifest>
